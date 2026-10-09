@@ -73,7 +73,7 @@ class AppointmentController extends Controller
 
     public function show(Appointment $appointment): View
     {
-        return view('admin.appointments.show', ['appointment' => $appointment->load('customer.appointments', 'type', 'provider'), 'statuses' => Appointment::STATUSES]);
+        return view('admin.appointments.show', ['appointment' => $appointment->load('customer.appointments', 'type', 'provider'), 'statuses' => Appointment::STATUSES, 'types' => AppointmentType::orderBy('sort')->get(), 'providers' => TeamMember::active()->where('accepts_bookings', true)->get()]);
     }
 
     /** Reschedule, reassign, or edit notes. */

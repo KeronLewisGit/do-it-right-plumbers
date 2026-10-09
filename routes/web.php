@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SiteController::class, 'home'])->name('home');
 Route::get('/about', [SiteController::class, 'about'])->name('about');
+Route::get('/membership', [SiteController::class, 'membership'])->name('membership');
 Route::get('/team', [SiteController::class, 'team'])->name('team');
 Route::get('/team/{member}', [SiteController::class, 'member'])->name('team.show');
 Route::get('/reviews', [SiteController::class, 'reviews'])->name('reviews');

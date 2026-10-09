@@ -20,7 +20,7 @@ class PostController extends Controller
 
     public function create(): View
     {
-        return view('admin.posts.form', ['post' => new Post(['category' => 'Education', 'published_at' => now()])]);
+        return view('admin.posts.form', ['post' => new Post(['category' => 'Tips', 'published_at' => now()])]);
     }
 
     public function store(Request $request): RedirectResponse

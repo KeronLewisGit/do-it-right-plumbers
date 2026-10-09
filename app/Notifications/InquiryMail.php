@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 
 class InquiryMail extends Notification
 {
-    public function __construct(public Inquiry $inquiry, public bool $forClinic = false) {}
+    public function __construct(public Inquiry $inquiry, public bool $forCompany = false) {}
 
     /** @return array<int, string> */
     public function via(object $notifiable): array
@@ -19,7 +19,7 @@ class InquiryMail extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $i = $this->inquiry;
-        if ($this->forClinic) {
+        if ($this->forCompany) {
             return (new MailMessage)->subject('New quote request: '.$i->name.($i->service ? ' · '.$i->service : ''))
                 ->greeting('Hi dispatch,')
                 ->line($i->name.' sent a message'.($i->service ? ' about '.strtolower($i->service) : '').'.')

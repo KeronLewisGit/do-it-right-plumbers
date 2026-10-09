@@ -13,7 +13,7 @@
                 <button class="btn-navy btn-sm w-full">Save</button>
             </form>
             @if ($inquiry->customer)<section class="card text-sm"><h3 class="font-display text-2xl">Customer record</h3><p class="mt-2"><a href="{{ route('admin.customers.show', $inquiry->customer) }}" class="font-semibold hover:text-teal-deep">{{ $inquiry->customer->fullName() }}</a> · {{ $inquiry->customer->appointments->count() }} job(s)</p></section>@endif
-            <form method="post" action="{{ route('admin.inquiries.destroy', $inquiry) }}" onsubmit="return confirm('Delete this enquiry?')" class="text-right">@csrf @method('delete')<button class="text-xs font-semibold text-rust hover:underline">Delete request</button></form>
+            <form method="post" action="{{ route('admin.inquiries.destroy', $inquiry) }}" onsubmit="return confirm('Delete this request?')" class="text-right">@csrf @method('delete')<button class="text-xs font-semibold text-rust hover:underline">Delete request</button></form>
         </aside>
     </div>
 </x-admin.layout>

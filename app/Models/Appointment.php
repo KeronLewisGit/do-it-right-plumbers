@@ -128,7 +128,7 @@ class Appointment extends Model
     /** Where the truck goes: the job's own address, else the customer's address on file. */
     public function addressLine(): ?string
     {
-        return $this->service_address ?: $this->customer?->address;
+        return $this->service_address ?: $this->customer->address;
     }
 
     public function manageUrl(): string

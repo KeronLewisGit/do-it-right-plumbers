@@ -18,7 +18,6 @@ class SiteController extends Controller
     {
         return view('site.home', [
             'services' => Service::active()->where('featured', true)->get(),
-            'team' => TeamMember::active()->take(4)->get(),
             'testimonials' => Testimonial::active()->where('featured', true)->take(4)->get(),
             'posts' => Post::published()->take(3)->get(),
             'hours' => app(Availability::class)->hoursForDisplay(),
@@ -29,6 +28,12 @@ class SiteController extends Controller
     public function about(): View
     {
         return view('site.about', ['team' => TeamMember::active()->get(), 'testimonials' => Testimonial::active()->where('featured', true)->take(3)->get()]);
+    }
+
+    /** The maintenance-plan membership, from config('company.membership'). */
+    public function membership(): View
+    {
+        return view('site.membership', ['plan' => config('company.membership'), 'testimonials' => Testimonial::active()->where('featured', true)->take(3)->get()]);
     }
 
     public function team(): View
@@ -56,9 +61,9 @@ class SiteController extends Controller
 
     public function area(string $city): View
     {
-        $areas = collect(config('company.areas'));
-        $name = $areas->keys()->first(fn ($c) => Str::slug($c) === $city);
-        abort_unless($name, 404);
+        $areas = collect(config()->array('company.areas'));
+        $name = $areas->keys()->first(fn ($c) => Str::slug((string) $c) === $city);
+        abort_unless(is_string($name), 404);
 
         return view('site.area', [
             'city' => $name, 'note' => $areas[$name],
@@ -81,7 +86,7 @@ class SiteController extends Controller
     /** XML sitemap of every public page, for search engines. */
     public function sitemap(): Response
     {
-        $urls = collect(['home', 'services', 'repipes', 'emergency', 'team', 'about', 'reviews', 'areas', 'blog', 'contact', 'book', 'privacy'])->map(fn ($r) => ['loc' => route($r), 'lastmod' => null])
+        $urls = collect(['home', 'services', 'repipes', 'emergency', 'membership', 'team', 'about', 'reviews', 'areas', 'blog', 'contact', 'book', 'privacy'])->map(fn ($r) => ['loc' => route($r), 'lastmod' => null])
             ->concat(Service::active()->get()->map(fn ($s) => ['loc' => route('services.show', $s), 'lastmod' => $s->updated_at]))
             ->concat(collect(array_keys(config('company.areas')))->map(fn ($c) => ['loc' => route('areas.show', Str::slug($c)), 'lastmod' => null]))
             ->concat(TeamMember::active()->get()->map(fn ($m) => ['loc' => route('team.show', $m), 'lastmod' => $m->updated_at]))

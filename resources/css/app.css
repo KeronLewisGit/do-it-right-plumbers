@@ -7,22 +7,21 @@
     --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
-    /* Brand: the 1930s badge logo in Tiffany-style teal, deep navy and cream, with brass for stars and badges. */
+    /* Brand: the 1930s badge logo in Tiffany-style teal, deep navy and cream, with brass for stars and badges.
+       Text colours are tuned so every small-text pairing on cream, sand, white and the tinted chips clears WCAG AA (4.5:1). */
     --color-cream: #faf6ee;
-    --color-paper: #ffffff;
     --color-sand: #f0e9da;
     --color-line: #e3dbc9;
     --color-navy: #14283a;
     --color-navy-soft: #243d54;
-    --color-stone: #65706e;
+    --color-stone: #606a68;
     --color-teal: #44b5a4;
-    --color-teal-deep: #1e8276;
+    --color-teal-deep: #1b766b;
     --color-teal-soft: #dcf2ee;
     --color-brass: #d9a441;
-    --color-brass-soft: #f6e7c4;
-    --color-rust: #c2502d;
+    --color-rust: #b64b2a;
     --color-sage: #e3ebe2;
-    --color-sage-deep: #5f7f64;
+    --color-sage-deep: #536e57;
 
     --radius-2xl: 1.5rem;
     --radius-3xl: 2rem;
@@ -36,21 +35,48 @@
 }
 
 @layer base {
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body { @apply bg-cream text-navy font-sans; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; color-scheme: light; }
+    /* One focus ring for everything keyboard-reachable (WCAG 2.4.7 / 2.4.11). Buttons keep their own ring via .btn. */
+    :where(a, button, summary, input, select, textarea, [tabindex]):focus-visible { outline: 2px solid var(--color-teal); outline-offset: 3px; border-radius: 4px; }
+    .input:focus-visible { outline: none; }
+    /* In-page anchors land below the sticky header. */
+    [id] { scroll-margin-top: 7.5rem; }
+    h1, h2, h3 { text-wrap: balance; }
+    p, li, dd { text-wrap: pretty; }
+    @media print { header, footer, .hero__hint, .fixed { display: none !important; } .hero { margin-top: 0; height: auto; } .hero__stage { position: static; height: auto; } .hero__media, .hero__wash, .hero__grain { display: none; } .js main { opacity: 1; transform: none; } }
+    body { @apply bg-cream text-navy font-sans text-base leading-normal; }
     ::selection { background: var(--color-teal-soft); }
     [x-cloak] { display: none !important; }
-    h1, h2, h3, .display { @apply font-display; }
+    h1, h2, h3 { @apply font-display; }
 }
 
 @layer components {
+    /*
+      Type scale (Material-style roles → classes). Two families only: Fraunces for display/headline, Manrope for everything else.
+        Display   .hero__title 48/60/72px · .h-display 36/48/60px · .h-section 30/36/48px
+        Headline  .h-card 24px · card titles text-2xl
+        Title     text-xl 20px (quotes, FAQ) · text-lg 18px
+        Body      text-base 16px (default, line-height 1.5) · text-sm 14px (secondary) · .lede 18/20px
+        Label     .eyebrow / .label / chips 11-12px uppercase, 0.2em tracking · nothing on the site is set below 11px
+    */
     .wrap { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
-    .section { @apply py-20 sm:py-28; }
-    .eyebrow { @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-teal-deep; }
+    /* Vertical rhythm: one scale for every page. */
+    .intro { @apply py-16 lg:py-24; }          /* page opener */
+    .section { @apply py-20 sm:py-28; }        /* full-bleed band */
+    .section-sm { @apply py-14 sm:py-20; }     /* lighter band */
+    .section-tail { @apply pb-20 sm:pb-28; }   /* block that follows an opener, before the next band */
+    .section-tail-sm { @apply pb-12 sm:pb-16; } /* mid block inside a page */
+    .band { @apply rounded-3xl p-8 sm:p-12; }   /* padded feature panel */
+    /* Two blocks on the same cream surface share one gap instead of stacking two paddings. */
+    :is(.page-hero, .section, .section-sm):not([class*=' bg-']):not([class^='bg-']) + :is(.section, .section-sm):not([class*=' bg-']):not([class^='bg-']) { @apply pt-0; }
+    .eyebrow { @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-deep; }
     .eyebrow::before { content: ''; @apply inline-block h-0.5 w-6 rounded bg-teal; }
     .h-display { @apply font-display text-4xl leading-[1.02] font-semibold tracking-tight text-navy sm:text-5xl lg:text-6xl; }
     .h-section { @apply font-display text-3xl leading-[1.08] font-semibold tracking-tight text-navy sm:text-4xl lg:text-5xl; }
     .h-card { @apply font-display text-2xl leading-tight font-semibold text-navy; }
+    /* The accent word in any display heading: italic teal, lighter on dark surfaces. */
+    .h-display em, .h-section em { @apply font-medium italic text-teal-deep; }
+    .text-cream em, .text-cream .h-section em { @apply text-teal; }
     .lede { @apply text-lg leading-relaxed text-stone sm:text-xl; }
     .prose-site { @apply text-base leading-relaxed text-navy-soft; }
     .prose-site p { @apply mb-5; }
@@ -64,7 +90,6 @@
     .btn-ghost { @apply btn bg-transparent text-navy ring-1 ring-navy/15 hover:bg-navy hover:text-cream hover:ring-navy; }
     .btn-light { @apply btn bg-white text-navy ring-1 ring-line hover:ring-teal; }
     .btn-rust { @apply btn bg-rust text-white hover:bg-[#a0401f]; }
-    .btn-brass { @apply btn bg-brass text-navy hover:bg-[#c08f2f]; }
     .btn-sm { @apply px-4 py-2 text-xs; }
     .btn-lg { @apply px-8 py-4 text-base; }
     .link-arrow { @apply inline-flex items-center gap-1.5 text-sm font-semibold text-navy transition hover:text-teal-deep; }
@@ -75,19 +100,19 @@
     .card-sand { @apply rounded-3xl bg-sand p-7; }
     .chip { @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold; }
     .frame { @apply relative overflow-hidden rounded-3xl; }
-    .frame-teal::after { content: ''; @apply pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/30; }
-    .gold-rule { @apply h-px w-full bg-gradient-to-r from-transparent via-teal/60 to-transparent; }
 
     .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone; }
     .input { @apply w-full rounded-2xl border-0 bg-white px-4 py-3 text-base text-navy shadow-sm ring-1 ring-line placeholder:text-stone/60 focus:outline-none focus:ring-2 focus:ring-teal; }
     .input-sm { @apply rounded-xl px-3 py-2 text-sm; }
+    .input[aria-invalid='true'] { @apply ring-2 ring-rust; }
+    .btn[aria-busy='true'] { @apply cursor-progress opacity-70; }
     .hint { @apply mt-1.5 text-xs text-stone; }
     .error { @apply mt-1.5 text-xs font-semibold text-rust; }
-    .check { @apply size-4 rounded border-line text-teal focus:ring-teal; }
+    .check { @apply size-4 rounded border-line accent-teal focus-visible:outline-2 focus-visible:outline-teal; }
 
     .marquee { @apply flex w-max gap-10 whitespace-nowrap; animation: marquee 40s linear infinite; }
-    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
-    .reveal.in { opacity: 1; transform: none; }
+    .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .js .reveal.in { opacity: 1; transform: none; }
     .nav-link { @apply rounded-full px-3.5 py-2 text-sm font-semibold text-navy-soft transition hover:bg-sand hover:text-navy; }
     .nav-link.active { @apply bg-sand text-navy; }
 
@@ -109,12 +134,61 @@
     .tone-teal { @apply bg-teal-soft text-teal-deep ring-1 ring-teal/40; }
 }
 
-/* Vintage touches: a dotted badge ring, a striped divider and the pipe-pattern hero backdrop. */
+/* Vintage touches: a dotted badge ring and the pipe-pattern backdrops. */
 .badge-ring { box-shadow: 0 0 0 3px var(--color-cream), 0 0 0 5px var(--color-teal); }
-.stripe { background-image: repeating-linear-gradient(135deg, var(--color-teal) 0 12px, transparent 12px 24px); }
 .pipes-bg { background-image: radial-gradient(circle at 1px 1px, rgb(20 40 58 / 0.08) 1px, transparent 0); background-size: 22px 22px; }
 .pipes-bg-light { background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.08) 1px, transparent 0); background-size: 22px 22px; }
-.ticker-dot::after { content: '•'; @apply mx-4 text-teal; }
 
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .marquee { animation: none; } .reveal { opacity: 1; transform: none; transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .marquee, .hero__grain, .hero__hint span { animation: none; }
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+    .js main { opacity: 1; transform: none; transition: none; }
+    .hero { height: auto; }
+    .hero__stage { position: relative; height: auto; min-height: 80vh; }
+    .hero__media { filter: none; transform: none; }
+    .hero__wash { opacity: .35; }
+    .hero__hint { display: none; }
+    .hero__orbit { display: none !important; }
+    .hero__media.is-3d .hero__fallback { opacity: 1; }
+}
+
+/* Scroll-scrubbed hero stage (resources/js/scroll-hero.js). The section is three screens tall; the stage pins for the ride. */
+.hero { @apply relative -mt-27 bg-navy; height: 300vh; }
+.hero__stage { @apply sticky top-0 overflow-hidden; height: 100vh; height: 100svh; }
+.hero__media { @apply absolute inset-0 h-full w-full object-cover; filter: blur(26px) saturate(1.15); transform: scale(1.12); will-change: filter, transform; }
+.hero__fallback { @apply absolute inset-0 h-full w-full object-cover; }
+.hero__orbit { @apply absolute inset-0 h-full w-full; }
+.hero__orbit[hidden] { display: none; }
+.hero__media.is-3d .hero__fallback { @apply opacity-0; }
+.hero__media.is-3d { background: radial-gradient(90% 70% at 50% 55%, rgb(36 61 84), rgb(20 40 58) 70%); }
+.hero__title { @apply font-display text-5xl font-medium leading-[1.02] tracking-tight text-cream sm:text-6xl lg:text-7xl; text-shadow: 0 6px 60px rgb(20 40 58 / .45); }
+.hero__title span { @apply italic text-teal; }
+.hero__wash { @apply pointer-events-none absolute inset-0 z-[2]; will-change: opacity; background: radial-gradient(120% 90% at 15% 20%, rgb(68 181 164 / .55), transparent 60%), radial-gradient(110% 90% at 85% 75%, rgb(36 61 84 / .65), transparent 55%), linear-gradient(160deg, rgb(20 40 58 / .75), rgb(68 181 164 / .3) 55%, rgb(20 40 58 / .65)); }
+.hero__stage::after { content: ''; @apply pointer-events-none absolute inset-0 z-[2]; background: linear-gradient(to right, rgb(20 40 58 / .72), rgb(20 40 58 / .35) 45%, transparent 70%), linear-gradient(to bottom, rgb(20 40 58 / .6), transparent 32%, transparent 60%, rgb(20 40 58 / .7)); }
+.hero__grain { @apply pointer-events-none absolute z-[3] opacity-[.06]; inset: -50%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); animation: grain 8s steps(10) infinite; }
+.hero__content { @apply relative z-[4] flex h-full flex-col justify-center pt-27; will-change: transform, opacity; }
+.hero__hint { @apply absolute bottom-7 left-1/2 z-[4] hidden -translate-x-1/2 lg:flex flex-col items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-cream/80; transition: opacity .4s ease; }
+.hero__hint span { @apply block h-11 w-px; background: linear-gradient(var(--color-cream), transparent); animation: drip 2s ease-in-out infinite; }
+@keyframes grain { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-6%, 4%); } 40% { transform: translate(4%, -6%); } 60% { transform: translate(-4%, -4%); } 80% { transform: translate(6%, 6%); } }
+@keyframes drip { 0% { transform: scaleY(0); transform-origin: top; } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* Header over the hero: transparent until the reader scrolls, then cream glass. */
+.nav-overlay .nav-shell { @apply bg-transparent; }
+.nav-overlay .nav-brand { @apply text-cream; }
+.nav-overlay .nav-brand-sub { @apply text-teal; }
+.nav-overlay .nav-link { @apply text-cream/85 hover:bg-white/10 hover:text-white; }
+.nav-overlay .nav-link.active { @apply bg-white/10 text-white; }
+.nav-overlay .btn-ghost { @apply text-cream ring-white/40 hover:bg-white/15 hover:text-white hover:ring-white/60; }
+.nav-overlay .nav-menu-btn { @apply text-cream ring-white/40; }
+.nav-overlay .badge-ring { box-shadow: 0 0 0 3px var(--color-navy), 0 0 0 5px var(--color-teal); }
+
+/* Page transitions (resources/js/motion.js): ease in on arrival, ease out before a same-site link. */
+.js main { opacity: 0; transform: translateY(12px); transition: opacity .5s cubic-bezier(.2, .65, .25, 1), transform .5s cubic-bezier(.2, .65, .25, 1); }
+.js.page-ready main { opacity: 1; transform: none; }
+.js.page-out main { opacity: 0; transform: translateY(-8px); transition-duration: .22s; }
+[data-parallax] { will-change: transform; }
+.count-up { font-variant-numeric: tabular-nums; }
+[data-accordion] details > :not(summary) { transition: opacity .25s ease; }
+[data-accordion] details:not([open]) > :not(summary) { opacity: 0; }

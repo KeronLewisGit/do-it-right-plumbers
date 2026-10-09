@@ -1,11 +1,30 @@
 import Alpine from 'alpinejs';
 import focus from '@alpinejs/focus';
+import { mountScrollHero } from './scroll-hero';
+import { mountMotion } from './motion';
 
 Alpine.plugin(focus);
 
-/** Scroll-reveal for sections marked .reveal. */
-const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+/** Reveal, counters, parallax, accordions and page transitions (resources/js/motion.js). */
+mountMotion();
+
+/** Home-page hero: the scroll-scrubbed stage with the 3D pipe orbit. */
+const scrollHero = document.querySelector('[data-scroll-hero]');
+if (scrollHero) {
+    let orbit = null, lastProgress = 0;
+    mountScrollHero(scrollHero, { onProgress: (p) => { lastProgress = p; orbit?.setProgress(p); } });
+
+    // The 3D manifold is a separate chunk, fetched only here, so every other page stays light.
+    const canvas = scrollHero.querySelector('[data-pipe-orbit]');
+    if (canvas && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        import('./pipe-orbit').then(({ mountPipeOrbit }) => {
+            canvas.hidden = false;
+            orbit = mountPipeOrbit(canvas);
+            canvas.parentElement.classList.add('is-3d');
+            orbit.setProgress(lastProgress);
+        }).catch(() => { canvas.hidden = true; }); // no WebGL: the photo stays
+    }
+}
 
 /** Three-step booking widget: type → date & time → details. Slots come from /book/slots. */
 Alpine.data('booking', (opts) => ({
@@ -18,11 +37,11 @@ Alpine.data('booking', (opts) => ({
     slots: [],
     loading: false,
     monthCursor: null,
-    init() {
+    async init() {
         const today = new Date();
         this.monthCursor = new Date(today.getFullYear(), today.getMonth(), 1);
-        if (this.type) this.loadDays();
-        if (this.type && this.date) this.loadSlots();
+        if (this.type) await this.loadDays();
+        if (this.type && this.date) await this.loadSlots();
     },
     get selected() { return this.types.find((t) => t.slug === this.type); },
     choose(slug) { this.type = slug; this.date = null; this.time = null; this.slots = []; this.step = 2; this.loadDays(); },

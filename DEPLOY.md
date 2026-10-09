@@ -6,16 +6,15 @@ fonts) is committed, so the server needs no Node.
 
 ## 1. hPanel
 
-1. **PHP**: Websites → PHP configuration → **8.4** (the lock file needs PHP >= 8.4.1; 8.3 fails `composer install`) with `pdo_mysql`, `mbstring`, `fileinfo`, `gd` (all default).
+1. **PHP**: Websites → PHP configuration → **8.3** (or newer) with `pdo_mysql`, `mbstring`, `fileinfo`, `gd` (all default). The lock file is resolved for PHP 8.3, so `composer install` works on Hostinger's default 8.3 binary.
 2. **MySQL**: Databases → create a database and user; note the three values.
-3. **Email**: create a mailbox such as `service@doitrightplumbers.com` and note its SMTP password. The site emails customers
+3. **Email**: create a mailbox such as `info@doitrightplumbers.com` and note its SMTP password. The site emails customers
    when they book, when you confirm/cancel, and the day before their visit; the office gets a copy of every booking and quote request.
 4. **SSL**: Security → SSL → active for the domain.
 
 ## 2. After `git clone` into `public_html` (SSH)
 
-On Hostinger the folder is `~/domains/<your-domain>/public_html`. If `php -v` on the command line still shows 8.3 after
-switching in hPanel, use the 8.4 binary directly: `/opt/alt/php84/usr/bin/php` in place of `php` below.
+On Hostinger the folder is `~/domains/<your-domain>/public_html`. Check `php -v` shows 8.3 or newer before you start.
 
 ```sh
 cd ~/domains/doitrightplumbers.com/public_html   # or wherever you cloned

@@ -70,6 +70,6 @@ class Post extends Model
 
     public function coverUrl(): string
     {
-        return $this->cover_image ? asset($this->cover_image) : asset('images/company/lounge.webp');
+        return $this->cover_image ? asset($this->cover_image) : asset('images/blog/bathroom.jpg');
     }
 }

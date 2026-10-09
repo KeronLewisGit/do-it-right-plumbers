@@ -19,7 +19,7 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate(['name' => ['required', 'string', 'max:100'], 'email' => ['required', 'email', 'max:160', Rule::unique('users', 'email')], 'role' => ['required', 'in:admin,staff'], 'password' => ['nullable', 'string', 'min:10']]);
+        $data = $request->validate(['name' => ['required', 'string', 'max:100'], 'email' => ['required', 'email', 'max:160', Rule::unique('users', 'email')], 'role' => ['required', 'in:admin,staff'], 'password' => ['nullable', 'string', 'min:12']]);
         $password = $data['password'] ?: Str::password(14, symbols: false);
         User::create(['name' => $data['name'], 'email' => $data['email'], 'role' => $data['role'], 'password' => $password]);
 

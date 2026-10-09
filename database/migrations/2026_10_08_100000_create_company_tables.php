@@ -142,7 +142,7 @@ return new class extends Migration
             $t->id();
             $t->string('title', 200);
             $t->string('slug', 220)->unique();
-            $t->string('category', 40)->default('Education');
+            $t->string('category', 40)->default('Tips');
             $t->text('excerpt')->nullable();
             $t->longText('body')->nullable();
             $t->string('cover_image')->nullable();

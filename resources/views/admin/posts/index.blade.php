@@ -1,4 +1,4 @@
-<x-admin.layout title="Journal posts">
+<x-admin.layout title="Tips & posts">
     <x-slot:actions><a href="{{ route('admin.posts.create') }}" class="btn-teal btn-sm">New post</a></x-slot:actions>
     <form class="mb-5 flex gap-2"><input name="q" value="{{ request('q') }}" placeholder="Search titles" class="input input-sm max-w-sm"><button class="btn-navy btn-sm">Search</button></form>
     <div class="card overflow-x-auto p-0"><table class="table"><thead><tr><th>Title</th><th>Category</th><th>Published</th><th></th></tr></thead><tbody>

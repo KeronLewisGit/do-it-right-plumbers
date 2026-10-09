@@ -1,10 +1,10 @@
 # Do It Right Plumbers
 
-A complete website and dispatch backend for Do It Right Plumbers, Orange, California. Laravel 13, Tailwind CSS 4, Alpine.js, SQLite locally and MySQL on Hostinger. Built as a portfolio piece on the same stack as the Smile Inn Dental site.
+A complete website and dispatch backend for Do It Right Plumbers, Orange, California. Laravel 13 on PHP 8.3+, Tailwind CSS 4, Alpine.js, three.js for the hero, SQLite locally and MySQL on Hostinger. Built as a portfolio piece on the same stack as the Smile Inn Dental site.
 
 ## What is in it
 
-**Public site**: home, seven service pages (whole-house repipes as the flagship with its own long-form page, water heaters, drains and sewer, leak detection, water filtration, plumbing repair, emergency), about, team with individual profiles, reviews, sixteen service-area city pages, a tips blog, contact and quote request, newsletter sign-up and online booking. Schema.org `Plumber` markup, XML sitemap and Open Graph tags on every page.
+**Public site**: home with a scroll-scrubbed hero (`resources/js/scroll-hero.js`: a pinned full-screen stage whose backdrop is a procedurally built 3D copper manifold in three.js, `resources/js/pipe-orbit.js`, with the scroll position turning the camera 270° around it while the blur clears; a photo stands in without WebGL); every other page opens with the shared `x-site.page-hero` component, and `resources/js/motion.js` adds staggered reveals, count-up stats, image parallax, animated FAQ accordions and page transitions, seven service pages (whole-house repipes as the flagship with its own long-form page, water heaters, drains and sewer, leak detection, water filtration, plumbing repair, emergency), about, the membership plan, team with individual profiles, reviews, thirty-six service-area city pages, a tips blog, contact and quote request, newsletter sign-up and online booking. Schema.org `Plumber` markup, XML sitemap and Open Graph tags on every page.
 
 **Online booking**: customers pick a service type (repair visit, drain clearing, water heater service, free repipe estimate, free water heater estimate, leak detection, whole-home inspection, free virtual estimate, emergency), a day from a live calendar and an open arrival window, and give the service address. Windows come from the dispatch hours, the window size and the number of trucks set in Admin. Customers get a confirmation email with a link to view or cancel; the office is emailed every request. Reminders go out the afternoon before each confirmed visit.
 
@@ -34,10 +34,10 @@ Run `php artisan test` for the feature suite. See `DEPLOY.md` for Hostinger.
 
 Company facts (name, phone, address, hours, founding story, service list, guarantee, specials, service area, review rating) were taken from the company's public Instagram, Linktree, LinkedIn, BBB profile, Facebook listing and a trade-press feature. Everything else is editable in Admin.
 
-- **Email address** `service@doitrightplumbers.com` is a placeholder: the public profiles do not list one.
+- **Email address** `info@doitrightplumbers.com`, the licence number (#995611), the current coupons ($93-or-free drain clearing, $36 off repairs, $89 tune-up), the membership plan, the texted-photo/GPS arrival process and the full city list come from the company's own website (Wayback Machine snapshot of March 2026).
+- **Phone number**: the public profiles list (714) 485-8449 (used here); the company website shows (714) 862-2393, which looks like a call-tracking number. Confirm which one the client wants published.
 - **Team bios** are illustrative. Edan and Aviran Bar-Lev (founders), Anthony Cumpiam and Payton White appear in public profiles; titles and bios should be confirmed.
 - **Reviews** in the seeder are sample quotes written to match the themes of the company's real Google reviews. Replace them with real ones in Admin → Reviews.
-- **License number** is not shown until `COMPANY_LICENSE` is set in `.env`.
 - **TikTok and YouTube URLs** are guessed from the Instagram handle.
 
 ## Photo credits

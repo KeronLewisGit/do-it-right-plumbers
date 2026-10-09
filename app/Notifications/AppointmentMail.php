@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notification;
 /** One email class for every job event: requested, confirmed, rescheduled, cancelled, reminder. */
 class AppointmentMail extends Notification
 {
-    public function __construct(public Appointment $appointment, public string $event, public bool $forClinic = false) {}
+    public function __construct(public Appointment $appointment, public string $event, public bool $forCompany = false) {}
 
     /** @return array<int, string> */
     public function via(object $notifiable): array
@@ -25,7 +25,7 @@ class AppointmentMail extends Notification
         $where = $a->addressLine();
         $company = config('company.name');
 
-        if ($this->forClinic) {
+        if ($this->forCompany) {
             return (new MailMessage)
                 ->subject(match ($this->event) {
                     'requested' => 'New online booking: '.$a->customer->fullName(), 'cancelled' => 'Cancelled by customer: '.$a->customer->fullName(), default => 'Booking update: '.$a->customer->fullName()

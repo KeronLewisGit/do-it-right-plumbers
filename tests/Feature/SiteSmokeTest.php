@@ -12,8 +12,11 @@ use App\Models\Subscriber;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Models\User;
+use App\Notifications\AppointmentMail;
+use App\Notifications\InquiryMail;
 use Database\Seeders\ContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
@@ -33,10 +36,10 @@ class SiteSmokeTest extends TestCase
         $service = Service::where('slug', 'water-heaters')->first();
         $member = TeamMember::first();
         $post = Post::first();
-        foreach ([route('home'), route('about'), route('team'), route('team.show', $member), route('reviews'), route('areas'), route('areas.show', 'santa-ana'), route('contact'), route('privacy'), route('sitemap'), route('services'), route('services.show', $service), route('repipes'), route('services.show', 'repipes'), route('emergency'), route('services.show', 'emergency'), route('blog'), route('blog', ['category' => 'Repipes']), route('blog.show', $post), route('book'), route('book', ['type' => 'free-repipe-estimate'])] as $url) {
+        foreach ([route('home'), route('about'), route('membership'), route('team'), route('team.show', $member), route('reviews'), route('areas'), route('areas.show', 'santa-ana'), route('contact'), route('privacy'), route('sitemap'), route('services'), route('services.show', $service), route('repipes'), route('services.show', 'repipes'), route('emergency'), route('services.show', 'emergency'), route('blog'), route('blog', ['category' => 'Repipes']), route('blog.show', $post), route('book'), route('book', ['type' => 'free-repipe-estimate'])] as $url) {
             $this->get($url)->assertOk();
         }
-        $this->get(route('home'))->assertSee('Plumbing done')->assertSee('(714) 485-8449')->assertSee('Whole-House Repipes');
+        $this->get(route('home'))->assertSee('Plumbing done')->assertSee('(714) 485-8449')->assertSee('Whole-House Repipes')->assertSee('data-scroll-hero', false)->assertSee('images/logo.png');
         $this->get(route('areas.show', 'not-a-city'))->assertNotFound();
     }
 
@@ -59,6 +62,9 @@ class SiteSmokeTest extends TestCase
         $response = $this->post(route('book.store'), $payload)->assertRedirect();
         $appointment = Appointment::first();
         $this->assertSame('pending', $appointment->status);
+        // Both the customer and the office are emailed (a constructor mismatch here once failed silently inside the catch).
+        Notification::assertSentOnDemand(AppointmentMail::class, fn (AppointmentMail $m, array $channels, AnonymousNotifiable $to) => ! $m->forCompany && isset($to->routes['mail']['ann@example.com']));
+        Notification::assertSentOnDemand(AppointmentMail::class, fn (AppointmentMail $m, array $channels, AnonymousNotifiable $to) => $m->forCompany && $to->routes['mail'] === config('company.booking.notify'));
         $this->assertSame('+17145550101', $appointment->customer->phone);
         $this->assertSame('12 Main St, Orange', $appointment->service_address);
         $this->assertSame('12 Main St, Orange', $appointment->customer->address, 'the first booking fills in the customer address');
@@ -85,6 +91,7 @@ class SiteSmokeTest extends TestCase
     {
         $this->post(route('contact.store'), ['name' => 'Bob Builder', 'email' => 'bob@example.com', 'phone' => '714 555 0199', 'service' => 'Repipe', 'address' => '9 Elm St, Tustin', 'message' => 'Third leak this year.'])->assertRedirect()->assertSessionHas('status');
         $this->assertSame(1, Inquiry::count());
+        Notification::assertSentOnDemandTimes(InquiryMail::class, 2);
         $this->assertSame('9 Elm St, Tustin', Inquiry::first()->address);
         $this->assertSame('Bob', Customer::first()->first_name);
         $this->post(route('newsletter.store'), ['email' => 'bob@example.com'])->assertSessionHas('newsletter');
