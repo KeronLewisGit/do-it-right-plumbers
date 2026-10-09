@@ -1,0 +1,120 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+
+    /* Brand: the 1930s badge logo in Tiffany-style teal, deep navy and cream, with brass for stars and badges. */
+    --color-cream: #faf6ee;
+    --color-paper: #ffffff;
+    --color-sand: #f0e9da;
+    --color-line: #e3dbc9;
+    --color-navy: #14283a;
+    --color-navy-soft: #243d54;
+    --color-stone: #65706e;
+    --color-teal: #44b5a4;
+    --color-teal-deep: #1e8276;
+    --color-teal-soft: #dcf2ee;
+    --color-brass: #d9a441;
+    --color-brass-soft: #f6e7c4;
+    --color-rust: #c2502d;
+    --color-sage: #e3ebe2;
+    --color-sage-deep: #5f7f64;
+
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2rem;
+    --shadow-soft: 0 20px 60px -30px rgb(28 26 23 / 0.25);
+    --shadow-card: 0 1px 0 rgb(28 26 23 / 0.04), 0 12px 32px -16px rgb(28 26 23 / 0.18);
+}
+
+/* Base button: a utility so the .btn-* components can @apply it (Tailwind v4 cannot apply layer classes). */
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@layer base {
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { @apply bg-cream text-navy font-sans; }
+    ::selection { background: var(--color-teal-soft); }
+    [x-cloak] { display: none !important; }
+    h1, h2, h3, .display { @apply font-display; }
+}
+
+@layer components {
+    .wrap { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
+    .section { @apply py-20 sm:py-28; }
+    .eyebrow { @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-teal-deep; }
+    .eyebrow::before { content: ''; @apply inline-block h-0.5 w-6 rounded bg-teal; }
+    .h-display { @apply font-display text-4xl leading-[1.02] font-semibold tracking-tight text-navy sm:text-5xl lg:text-6xl; }
+    .h-section { @apply font-display text-3xl leading-[1.08] font-semibold tracking-tight text-navy sm:text-4xl lg:text-5xl; }
+    .h-card { @apply font-display text-2xl leading-tight font-semibold text-navy; }
+    .lede { @apply text-lg leading-relaxed text-stone sm:text-xl; }
+    .prose-site { @apply text-base leading-relaxed text-navy-soft; }
+    .prose-site p { @apply mb-5; }
+    .prose-site h2 { @apply mt-10 mb-4 font-display text-3xl font-medium text-navy; }
+    .prose-site h3 { @apply mt-8 mb-3 font-display text-2xl font-medium text-navy; }
+    .prose-site ul { @apply mb-5 list-disc space-y-2 pl-6; }
+    .prose-site a { @apply text-teal-deep underline decoration-teal/40 underline-offset-4 hover:decoration-teal; }
+
+    .btn-teal { @apply btn bg-teal text-navy hover:bg-teal-deep hover:text-white; }
+    .btn-navy { @apply btn bg-navy text-cream hover:bg-navy-soft; }
+    .btn-ghost { @apply btn bg-transparent text-navy ring-1 ring-navy/15 hover:bg-navy hover:text-cream hover:ring-navy; }
+    .btn-light { @apply btn bg-white text-navy ring-1 ring-line hover:ring-teal; }
+    .btn-rust { @apply btn bg-rust text-white hover:bg-[#a0401f]; }
+    .btn-brass { @apply btn bg-brass text-navy hover:bg-[#c08f2f]; }
+    .btn-sm { @apply px-4 py-2 text-xs; }
+    .btn-lg { @apply px-8 py-4 text-base; }
+    .link-arrow { @apply inline-flex items-center gap-1.5 text-sm font-semibold text-navy transition hover:text-teal-deep; }
+    .link-arrow svg { @apply size-4 transition-transform; }
+    .link-arrow:hover svg { transform: translateX(3px); }
+
+    .card { @apply rounded-3xl bg-white p-7 shadow-card ring-1 ring-line/70; }
+    .card-sand { @apply rounded-3xl bg-sand p-7; }
+    .chip { @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold; }
+    .frame { @apply relative overflow-hidden rounded-3xl; }
+    .frame-teal::after { content: ''; @apply pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/30; }
+    .gold-rule { @apply h-px w-full bg-gradient-to-r from-transparent via-teal/60 to-transparent; }
+
+    .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone; }
+    .input { @apply w-full rounded-2xl border-0 bg-white px-4 py-3 text-base text-navy shadow-sm ring-1 ring-line placeholder:text-stone/60 focus:outline-none focus:ring-2 focus:ring-teal; }
+    .input-sm { @apply rounded-xl px-3 py-2 text-sm; }
+    .hint { @apply mt-1.5 text-xs text-stone; }
+    .error { @apply mt-1.5 text-xs font-semibold text-rust; }
+    .check { @apply size-4 rounded border-line text-teal focus:ring-teal; }
+
+    .marquee { @apply flex w-max gap-10 whitespace-nowrap; animation: marquee 40s linear infinite; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .nav-link { @apply rounded-full px-3.5 py-2 text-sm font-semibold text-navy-soft transition hover:bg-sand hover:text-navy; }
+    .nav-link.active { @apply bg-sand text-navy; }
+
+    /* Admin */
+    .adm-side-link { @apply flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-stone transition hover:bg-sand hover:text-navy; }
+    .adm-side-link.active { @apply bg-navy text-cream hover:bg-navy hover:text-cream; }
+    .adm-side-link svg { @apply size-4.5 shrink-0; }
+    .table { @apply w-full text-left text-sm; }
+    .table th { @apply border-b border-line px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-stone; }
+    .table td { @apply border-b border-line/70 px-4 py-3 align-middle; }
+    .table tr:last-child td { @apply border-0; }
+    .table tbody tr:hover { @apply bg-sand/50; }
+    .stat { @apply rounded-2xl bg-white p-5 ring-1 ring-line; }
+    .tone-amber { @apply bg-amber-50 text-amber-800 ring-1 ring-amber-200; }
+    .tone-green { @apply bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200; }
+    .tone-blue { @apply bg-sky-50 text-sky-800 ring-1 ring-sky-200; }
+    .tone-red { @apply bg-red-50 text-red-800 ring-1 ring-red-200; }
+    .tone-slate { @apply bg-sand text-stone ring-1 ring-line; }
+    .tone-teal { @apply bg-teal-soft text-teal-deep ring-1 ring-teal/40; }
+}
+
+/* Vintage touches: a dotted badge ring, a striped divider and the pipe-pattern hero backdrop. */
+.badge-ring { box-shadow: 0 0 0 3px var(--color-cream), 0 0 0 5px var(--color-teal); }
+.stripe { background-image: repeating-linear-gradient(135deg, var(--color-teal) 0 12px, transparent 12px 24px); }
+.pipes-bg { background-image: radial-gradient(circle at 1px 1px, rgb(20 40 58 / 0.08) 1px, transparent 0); background-size: 22px 22px; }
+.pipes-bg-light { background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.08) 1px, transparent 0); background-size: 22px 22px; }
+.ticker-dot::after { content: '•'; @apply mx-4 text-teal; }
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee { animation: none; } .reveal { opacity: 1; transform: none; transition: none; } }

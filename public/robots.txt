@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /appointment/
+Disallow: /book/done/
+Allow: /
+
+Sitemap: https://www.smileinndental.com/sitemap.xml
