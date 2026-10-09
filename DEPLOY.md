@@ -42,8 +42,11 @@ server's SSH key (`cat ~/.ssh/id_rsa.pub`, create one with `ssh-keygen` if missi
 ## 3. Install and configure
 
 ```sh
-composer install --no-dev --optimize-autoloader --no-interaction
-# if "composer: command not found": php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
+# Hostinger's `composer` shell alias is broken ("Could not open input file: alias"), so call the phar through php:
+php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
+# If that file does not exist, download Composer into the project and use it from there:
+#   curl -sS https://getcomposer.org/installer | php
+#   php composer.phar install --no-dev --optimize-autoloader --no-interaction
 
 cp .env.hostinger.example .env
 php artisan key:generate --force
@@ -96,7 +99,7 @@ Laravel's scheduler then sends the "your visit is tomorrow" emails at 5 PM Pacif
 ```sh
 cd ~/domains/lavender-jellyfish-611595.hostingersite.com/public_html
 git pull
-composer install --no-dev --optimize-autoloader --no-interaction
+php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction   # or php composer.phar install …
 php artisan migrate --force
 php artisan optimize:clear && php artisan optimize
 ```
